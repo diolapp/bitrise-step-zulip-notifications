@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import * as zulip from 'zulip-js';
+import request, { FormData, Options } from 'sync-request';
 
 import { Config } from './config';
 import { Recipient } from './recipient';
@@ -57,20 +57,34 @@ export class Message {
 
   public send(config: Config): void {
     // First, convert the message into an anonymous (JSON) object
-    const message = this.toJson(config);
+    const message: object = this.toJson(config);
 
-    // Setup the Zulip JS config
-    const zulipConfig = {
-      apiKey: config.zulip.bot.apiKey,
-      realm: config.zulip.url,
-      username: config.zulip.bot.emailAddress,
+    // Create the auth string
+    const auth: string = Buffer
+      .from(`${config.zulip.bot.emailAddress}:${config.zulip.bot.apiKey}`)
+      .toString('base64');
+
+    // Setup the request options
+    const options: Options = {
+      headers: {
+        authorization: `Basic ${auth}`,
+      },
     };
 
-    // Send the message to Zulip
-    zulip(zulipConfig).then((client): void => {
-      client.messages.send(message).then(console.log);
-    }).catch((error): void => {
-      throw error;
+    // Configure the body of the request
+    options.form = new FormData();
+    Object.keys(message).forEach((key: string): void => {
+      options.form.append(key, message[key]);
     });
+
+    // Send the request
+    const res = request('POST', config.zulip.url, options);
+
+    // Check that the request was successful
+    if (res.statusCode === 200) {
+      console.log('\tMessage sent successfully!');
+    } else {
+      console.log(`\tError sending message: ${JSON.parse(res.getBody('utf8'))['msg']}`);
+    }
   }
 }

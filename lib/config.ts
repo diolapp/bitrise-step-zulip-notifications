@@ -121,7 +121,7 @@ export class Config {
       recipients: program.recipients,
       template: program.template,
       topic: program.topic,
-      url: `https://${program.zulipDomain}.zulipchat.com/`,
+      url: `https://${program.zulipDomain}.zulipchat.com/api/v1/messages`,
     };
   }
 }
