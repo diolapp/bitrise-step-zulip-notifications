@@ -311,3 +311,59 @@ inputs:
   #    is_expand: true
   #    is_required: false
   #    is_sensitive: false
+  - zulip_step_build_number: $BITRISE_BUILD_NUMBER
+    opts:
+      title: "Build Number"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_build_status: $BITRISE_BUILD_STATUS
+    opts:
+      title: "Build Status"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_build_url: $BITRISE_BUILD_URL
+    opts:
+      title: "Build URL"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_git_commit: $BITRISE_GIT_COMMIT
+    opts:
+      title: "Git Commit"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_git_message: $BITRISE_GIT_MESSAGE
+    opts:
+      title: "Git Message"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_pr: $PR
+    opts:
+      title: "Pull Request"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_pull_request: $BITRISE_PULL_REQUEST
+    opts:
+      title: "Pull Request ID"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_pull_request_repository: $BITRISEIO_PULL_REQUEST_REPOSITORY_URL
+    opts:
+      title: "Pull Request Repository"
+      is_dont_change_value: true
+      is_expand: true
+      is_required: true
+      is_sensitive: false

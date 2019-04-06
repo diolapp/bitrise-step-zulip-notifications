@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-import { CommanderStatic } from 'commander';
-
 /**
  * The config for the script
  * 
@@ -79,49 +77,47 @@ export class Config {
     topic: string;
     url: string;
   };
-
-  public constructor(program: CommanderStatic) {
+  
+  public constructor(args) {
     // Set the build properties
     this.build = {
-      number: process.env.BITRISE_BUILD_NUMBER,
-      result: process.env.BITRISE_BUILD_STATUS === '0' ? 'passed' : 'failed',
-      url: process.env.BITRISE_BUILD_URL,
+      number: args.bn,
+      result: args.bs === '0' ? 'passed' : 'failed',
+      url: args.bu,
     };
 
     // Set the git properties
     this.git = {
       commit: {
-        hash: process.env.BITRISE_GIT_COMMIT,
-        message: process.env.BITRISE_GIT_MESSAGE,
+        hash: args.gc,
+        message: args.gm,
       },
     };
 
     // Set the pull request properties
     this.pullRequest = {
-      id: process.env.BITRISE_PULL_REQUEST,
-      repository: process.env.BITRISEIO_PULL_REQUEST_RESPOSITORY_URL,
-      status: process.env.PR === 'true',
+      id: args.pi,
+      repository: args.pu,
+      status: args.pr === 'true',
     };
 
     // Set the Zulip properties
     this.zulip = {
       bot: {
-        apiKey: program.botKey,
-        emailAddress: program.botEmail,
+        apiKey: args.bk,
+        emailAddress: args.be,
       },
-      domain: program.zulipDomain,
-      emoji: this.build.result === 'passed'
-        ? program.emojiSuccess
-        : program.emojiFailure,
+      domain: args.zd,
+      emoji: this.build.result === 'passed' ? args.es : args.ef,
       pullRequest: {
-        recipients: program.recipientsPullRequest,
-        template: program.templatePullRequest,
-        topic: program.topicPullRequest,
+        recipients: args.rp,
+        template: args.tp,
+        topic: args.op,
       },
-      recipients: program.recipients,
-      template: program.template,
-      topic: program.topic,
-      url: `https://${program.zulipDomain}.zulipchat.com/api/v1/messages`,
+      recipients: args.r,
+      template: args.t,
+      topic: args.o,
+      url: `https://${args.zd}.zulipchat.com/api/v1/messages`,
     };
   }
 }
