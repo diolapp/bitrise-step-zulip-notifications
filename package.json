@@ -1,0 +1,27 @@
+{
+  "name": "bitrise-step-zulip-notifications",
+  "version": "1.0.0",
+  "description": "Send build notifications to Zulip from Bitrise",
+  "main": "index.ts",
+  "repository": "https://github.com/diolapp/bitrise-step-zulip-notifications",
+  "author": "Seth Murphy <smurphy@diol.app>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ./index.ts ./lib/**/*"
+  },
+  "dependencies": {
+    "@types/node": "^11.13.0",
+    "commander": "^2.20.0",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.1",
+    "zulip-js": "^2.0.5"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.6.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  }
+}

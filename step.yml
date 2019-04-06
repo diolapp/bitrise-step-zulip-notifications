@@ -1,0 +1,313 @@
+#
+# A couple of useful guides & docs:
+#
+# - Main Bitrise CLI docs: https://github.com/bitrise-io/bitrise/tree/master/_docs
+# - Step Development Guideline: https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+# - Bitrise.yml format spec: https://github.com/bitrise-io/bitrise/blob/master/_docs/bitrise-yml-format-spec.md
+# - Bitrise docs: http://devcenter.bitrise.io/
+# - Bitrise CLI guides: http://devcenter.bitrise.io/bitrise-cli/
+
+title: |-
+  Zulip Notifications
+summary: |
+  Send build notifications to Zulip
+description: |
+  Send build notifications to Zulip based on build status and release status.
+website: https://github.com/diolapp/bitrise-step-zulip-notifications
+source_code_url: https://github.com/diolapp/bitrise-step-zulip-notifications
+support_url: https://github.com/diolapp/bitrise-step-zulip-notifications/issues
+host_os_tags:
+  - osx-10.10
+  - ubuntu-16.04
+
+# If this step should be available only for certain project types
+# just uncomment this `project_type_tags` section and include all the
+# project types supported by the step. If the step can be used for all
+# project types then you can just remove this section.
+# If no `project_type_tags` specified (or specified as an empty array)
+# that means the step can be used for any project type.
+# You can find more information about project type tags in the Step Development Guideline:
+# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+#
+# project_type_tags:
+#   - ios
+#   - macos
+#   - android
+#   - xamarin
+#   - react-native
+#   - cordova
+#   - ionic
+
+# Type tags are used for categorizing steps, for easier step discovery in Step Libraries.
+# You can find more information about type tags in the Step Development Guideline:
+# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+type_tags:
+  - notification
+
+is_requires_admin_user: true
+is_always_run: true
+is_skippable: true
+run_if: ""
+
+deps:
+  brew:
+  - name: node@8
+  apt_get:
+  - name: nodejs
+
+
+toolkit:
+  bash:
+    entry_file: step.sh
+
+
+inputs:
+  # Required Inputs
+  - zulip_step_domain:
+    opts:
+      title: "Zulip Domain"
+      summary: The Zulip domain to send messages to
+      description: |
+        If you log onto `https://myapp.zulipchat.com`, then your domain is `myapp`
+      is_expand: true
+      is_required: true
+      is_sensitive: true
+  - zulip_step_bot_email:
+    opts:
+      title: "Zulip Bot Email Address"
+      summary: The email address for your bot
+      description: |
+        This variable holds the value of the bot's email address that you want the
+        messages to originate from. While you could technically enter your own email
+        address in this field, __this is **_STRONGLY_** discoraged__.
+
+        To create a new bot:
+          1. From the desktop (main page), click on the `gear` icon in the upper
+            right corner.
+          2. Select `Settings`.
+          3. On the left, click `Your bots`.
+          4. Select `Add a new bot`.
+          5. For the `Bot type`, you want `Generic bot`
+          6. Enter whatever values you would like for the `Name`, `Username`, and
+            `Profile picture` fields.
+          7. Select `Create bot`, this will take you back to the `Your bots` page.
+          8. Under the bot you just created, the email address you need is the `USERNAME`.
+
+        To find your bot's email address for an existing bot:
+          1. From the desktop (main page), click on the `gear` icon in the upper
+            right corner.
+          2. Select `Settings`.
+          3. On the left, click `Your bots`.
+          4. Under the bot you want to use, the email address you need is the `USERNAME`.
+      is_expand: true
+      is_required: true
+      is_sensitive: true
+  - zulip_step_bot_key:
+    opts:
+      title: "Zulip Bot API Key"
+      summary: The API key for your bot
+      description: |
+        This variable holds the value of the bot's api key that you want the
+        messages to originate from. While you could technically enter your own password
+        in this field, __this is **_STRONGLY_** discoraged__.
+
+        To create a new bot:
+          1. From the desktop (main page), click on the `gear` icon in the upper
+            right corner.
+          2. Select `Settings`.
+          3. On the left, click `Your bots`.
+          4. Select `Add a new bot`.
+          5. For the `Bot type`, you want `Generic bot`
+          6. Enter whatever values you would like for the `Name`, `Username`, and
+            `Profile picture` fields.
+          7. Select `Create bot`, this will take you back to the `Your bots` page.
+          8. Under the bot you just created, the email address you need is the `API KEY`.
+
+        To find your bot's API Key for an existing bot:
+          1. From the desktop (main page), click on the `gear` icon in the upper
+            right corner.
+          2. Select `Settings`.
+          3. On the left, click `Your bots`.
+          4. Under the bot you want to use, the email address you need is the `API KEY`.
+      is_expand: true
+      is_required: true
+      is_sensitive: true
+  - zulip_step_recipients:
+    opts:
+      title: "Zulip Recipeients"
+      summary: List of recipients to send build notifications to
+      description: |
+        This variable holds the list of reciepients that you want to send build
+        notifications to for non pull request builds. The recipients can be either
+        streams (i.e. `Builds`) or private messages (i.e. 
+        `some-person@diolapp.zulipchat.org`).
+
+        **IMPORTANT INFORMATION**
+        You can **_only_** send messages to streams that are a part of **_your_**
+        domain. This is not a limitation imposed by this step, it is a limitation
+        imposed by Zulip. As far as I know, as of April 2, 2019, you can send a
+        private message to any user, so long as you know their email address.
+
+        To figure out your domain, simply look at the URL you visit. If the URL is
+        `https://mySuperCoolOrganization.zulipchat.org`, then your domain is
+        `mySuperCoolOrganization`.
+
+        To have multiple reciepients, all you need to do is separate them with a comma
+        `,`, space around the comma is entirely optional. You can also mix and match streams
+        and private messages.
+
+        ```
+        Examples:
+
+          Valid:  "Stream1, some-user@someOrg.zulipchat.com, Stream2"
+          Valid:  "Stream1,some-user@someOrg.zulipchat.com,Stream2"
+          Valid:  "Stream1 , some-suer@someOrg.zulipchat.com , Stream2"
+        ```
+      is_expand: true
+      is_required: true
+      is_sensitive: true
+  - zulip_step_template:
+    opts:
+      title: "Message Template"
+      summary: The template for the message
+      content: |-
+        {buildEmoji} Build {buildNumber} has {buildResult}!
+      description: |
+        This variable holds the message template for all non pull-request builds. You can use any
+        variables in the message that are provided to that function. All you need to do
+        is include the variable's name in curly braces `{}`, and let the magic work.
+
+        An example build message:
+        ```md
+        {buildEmoji} **Build {buildNumber} has {buildResult}!**
+
+        For more information, please see: [Build {buildNumber}]({buildUrl})
+        ```
+
+        The available variables are:
+          - **`buildEmoji`**: The emoji that corrosponds with the build status
+          - **`buildNumber`**: The Bitrise build number
+          - **`buildResult`**: `passed` if the build passed, else `failed`
+          - **`buildUrl`**: The URL which links to this build
+          - **`gitCommitId`**: The hash for the commit that triggered this build
+          - **`gitCommitMessage`**: The message for the commit that triggered this build
+      is_expand: false
+      is_required: true
+      is_sensitive: false
+  - zulip_step_topic:
+    opts:
+      title: "Zulip Topic"
+      summary: The topic for your build notifications. Only used for streams.
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_recipients_pr:
+    opts:
+      title: "Zulip Recipients (Pull Request)"
+      summary: List of recipients to send pull request build notifications to
+      description: |
+        This variable holds the list of reciepients that you want to send build
+        notifications to for non pull request builds. The recipients can be either
+        streams (i.e. `Builds`) or private messages (i.e. 
+        `some-person@diolapp.zulipchat.org`).
+
+        **IMPORTANT INFORMATION**
+        You can **_only_** send messages to streams that are a part of **_your_**
+        domain. This is not a limitation imposed by this step, it is a limitation
+        imposed by Zulip. As far as I know, as of April 2, 2019, you can send a
+        private message to any user, so long as you know their email address.
+
+        To figure out your domain, simply look at the URL you visit. If the URL is
+        `https://mySuperCoolOrganization.zulipchat.org`, then your domain is
+        `mySuperCoolOrganization`.
+
+        To have multiple reciepients, all you need to do is separate them with a comma
+        `,`, space around the comma is entirely optional. You can also mix and match streams
+        and private messages.
+
+        ```
+        Examples:
+
+          Valid:  "Stream1, some-user@someOrg.zulipchat.com, Stream2"
+          Valid:  "Stream1,some-user@someOrg.zulipchat.com,Stream2"
+          Valid:  "Stream1 , some-suer@someOrg.zulipchat.com , Stream2"
+        ```
+      is_expand: true
+      is_required: false
+      is_sensitive: true
+  - zulip_step_template_pr:
+    opts:
+      title: "Message Template (Pull Request)"
+      summary: The template for the message if this is a pull request build
+      content: |-
+        {buildEmoji} Build {buildNumber} has {buildResult}!
+
+        Pull Request ID: {pullRequestId}
+      description: |
+        This variable holds the message template for all pull request builds. You can use any
+        variables in the message that are provided to that function. All you need to do
+        is include the variable's name in curly braces `{}`, and let the magic work.
+
+        Also of note, if you leave the recipients on PR empty, this value will never get used.
+
+        An example build message:
+        ```md
+        {buildEmoji} **Build {buildNumber} has {buildResult}!**
+
+        For more information, please see: [Build {buildNumber}]({buildUrl})
+        ```
+
+        The available variables are (italics variables are added to `ZULIP_MESSAGE_TEMPLATE`):
+          - **`buildEmoji`**: The emoji that corrosponds with the build status
+          - **`buildNumber`**: The Bitrise build number
+          - **`buildResult`**: `passed` if the build passed, else `failed`
+          - **`buildUrl`**: The URL which links to this build
+          - **`gitCommitHash`**: The hash for the commit that triggered this build
+          - **`gitCommitMessage`**: The message for the commit that triggered this build
+          - **_`pullRequestId`_**: The pull request that triggered this build
+          - **_`pullRequestRepository`_**: The URL to the repository that triggered the build 
+      is_expand: false
+      is_required: false
+      is_sensitive: false
+  - zulip_step_topic_pr:
+    opts:
+      title: "Zulip Topic (Pull Request)"
+      summary: The topic for your pull request build notifications. This field is optional.
+      is_expand: true
+      is_required: false
+      is_sensitive: false
+  - zulip_step_emoji_success: ":check_mark:"
+    opts:
+      title: "Zulip Emoji (Build Success)"
+      summary: The emoji placed in your message when the build succeeds
+      description: |
+        To get the emoji code, please refer to
+        [Zulip's Documentation](https://zulipchat.com/help/emoji-and-emoticons). If
+        no emoji is provided (i.e. you remove the default value and leave the field
+        blank), then no emoji will be included in the final message
+      is_expand: false
+      is_required: false
+      is_sensitive: false
+  - zulip_step_emoji_failure: ":cross_mark:"
+    opts:
+      title: "Zulip Emoji (Build Failed)"
+      summary: The emoji placed in your message when the build fails
+      description: |
+        To get the emoji code, please refer to
+        [Zulip's Documentation](https://zulipchat.com/help/emoji-and-emoticons). If
+        no emoji is provided (i.e. you remove the default value and leave the field
+        blank), then no emoji will be included in the final message
+      is_expand: false
+      is_required: false
+      is_sensitive: false
+  # Just gonna leave this here for now...it's not used yet.
+  #- zulip_step_on_build_released_emoji: ":package:"
+  #  opts:
+  #    title: "Zulip Emoji (Build Success)"
+  #    summary: The emoji placed in your message when the build succeeds
+  #    description: |
+  #      To get the emoji code, please refer to [Zulip's Documentation](https://zulipchat.com/help/emoji-and-emoticons)
+  #      If the emoji is left blank, then no emoji will be included in the final build message
+  #    is_expand: true
+  #    is_required: false
+  #    is_sensitive: false
