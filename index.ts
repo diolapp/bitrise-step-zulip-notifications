@@ -33,122 +33,104 @@ import { Template } from './lib/template';
 
 // Process the command line arguments that should have been passed to the step
 const args = yargs
-  .option('zulip-domain', {
-    alias: 'd',
-    demandOption: true,
-    describe: 'The Zulip domain to send messages to',
-    string: true,
-  })
   .option('bot-email', {
-    alias: 'e',
     demandOption: true,
     describe: 'The email address for the Zulip bot to use',
     string: true,
   })
   .option('bot-key', {
-    alias: 'k',
     demandOption: true,
     describe: 'The API key for the Zulip bot to use',
     string: true,
   })
-  .option('recipients', {
-    alias: 'r',
-    demandOption: true,
-    describe: 'The list of recipients for non pull request builds',
-    string: true,
-  })
-  .option('template', {
-    alias: 't',
-    demandOption: true,
-    describe: 'The message template for non pull request builds',
-    string: true,
-  })
-  .option('topic', {
-    alias: 'o',
-    demandOption: true,
-    describe: 'The topic of the message for non pull request builds',
-    string: true,
-  })
-  .option('recipients-pull-request', {
-    alias: 'R',
-    demandOption: false,
-    describe: 'The list of recipients for pull request builds',
-    string: true,
-  })
-  .option('template-pull-request', {
-    alias: 'T',
-    demandOption: false,
-    describe: 'The message template for pull request builds',
-    string: true,
-  })
-  .option('topic-pull-request', {
-    alias: 'O',
-    demandOption: false,
-    describe: 'The topic of the message for pull request builds',
-    string: true,
-  })
-  .option('emoji-success', {
-    alias: 'm',
-    demandOption: false,
-    describe: 'The emoji for a successful build',
-    string: true,
-  })
-  .option('emoji-failure', {
-    alias: 'M',
-    demandOption: false,
-    describe: 'The emoji for a failed build',
-    string: true,
-  })
-  .option('git-commit', {
-    alias: 'g',
-    demandOption: true,
-    describe: 'The git commit ID for the build',
-    string: true,
-  })
-  .option('git-message', {
-    alias: 'G',
-    demandOption: true,
-    describe: 'The git commit message for the build',
-    string: true,
-  })
   .option('build-number', {
-    alias: 'n',
     demandOption: true,
     describe: 'The build number',
     string: true,
   })
   .option('build-status', {
-    alias: 's',
     demandOption: true,
     describe: 'The build status indicator',
     string: true,
   })
   .option('build-url', {
-    alias: 'u',
     demandOption: true,
     describe: 'The URL for the build',
     string: true,
   })
-  .option('pull-request', {
-    alias: 'p',
+  .option('git-commit', {
     demandOption: true,
-    describe: 'Status indicator for whether or not this is a pull request build',
+    describe: 'The git commit ID for the build',
+    string: true,
+  })
+  .option('git-message', {
+    demandOption: true,
+    describe: 'The git commit message for the build',
+    string: true,
+  })
+  .option('pull-request', {
+    demandOption: true,
+    describe: 'Pull request indicator',
     string: true,
   })
   .option('pull-request-id', {
-    alias: 'i',
     demandOption: true,
     describe: 'The ID for the pull request that triggered the build',
     string: true,
   })
   .option('pull-request-repository', {
-    alias: 'P',
     demandOption: true,
     describe: 'The URL for the repository of the pull request',
     string: true,
   })
-  .help().alias('help', 'h')
-  .version().alias('version', 'v')
+  .option('recipients', {
+    demandOption: true,
+    describe: 'The list of recipients for non pull request builds',
+    string: true,
+  })
+  .option('template', {
+    demandOption: true,
+    describe: 'The message template for non pull request builds',
+    string: true,
+  })
+  .option('topic', {
+    demandOption: true,
+    describe: 'The topic of the message for non pull request builds',
+    string: true,
+  })
+  .option('zulip-domain', {
+    demandOption: true,
+    describe: 'The Zulip domain to send messages to',
+    string: true,
+  })
+  .option('emoji-success', {
+    demandOption: false,
+    describe: 'The emoji for a successful build',
+    string: true,
+  })
+  .option('emoji-failure', {
+    demandOption: false,
+    describe: 'The emoji for a failed build',
+    string: true,
+  })
+  .option('recipients-pull-request', {
+    demandOption: false,
+    describe: 'The list of recipients for pull request builds',
+    string: true,
+  })
+  .option('template-pull-request', {
+    demandOption: false,
+    describe: 'The message template for pull request builds',
+    string: true,
+  })
+  .option('topic-pull-request', {
+    demandOption: false,
+    describe: 'The topic of the message for pull request builds',
+    string: true,
+  })
+  .help()
+  .version()
+  .wrap(yargs.terminalWidth())
   .parse();
 
 // Setup the config based on the parameters send via the command line

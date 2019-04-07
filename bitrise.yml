@@ -44,6 +44,7 @@ workflows:
         - zulip_step_recipients: $ZULIP_TESTING_RECIPIENTS
         - zulip_step_template:  "{buildEmoji} **Build {buildNumber} has {buildResult}!**"
         - zulip_step_topic: "Testing"
+        - zulip_step_build_number: 0
 
   # ----------------------------------------------------------------
   # --- workflows to Share this step into a Step Library

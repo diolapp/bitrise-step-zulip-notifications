@@ -40,10 +40,10 @@ export interface Config {
     };
   };
 
-  pullRequest: {
-    id: string;
-    repository: string;
-    status: boolean;
+  pullRequest?: {
+    id?: string;
+    repository?: string;
+    status?: boolean;
   }
 
   zulip: {
@@ -53,10 +53,10 @@ export interface Config {
     };
     domain: string;
     emoji: string;
-    pullRequest: {
-      recipients: string;
-      template: string;
-      topic: string;
+    pullRequest?: {
+      recipients?: string;
+      template?: string;
+      topic?: string;
     };
     recipients: string;
     template: string;

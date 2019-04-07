@@ -62,7 +62,62 @@ toolkit:
 
 
 inputs:
-  # Required Inputs
+  - zulip_step_build_number: $BITRISE_BUILD_NUMBER
+    opts:
+      title: "Build Number"
+      summary: The build number, used for message templates
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_build_status: $BITRISE_BUILD_STATUS
+    opts:
+      title: "Build Status"
+      summary: The build status, used for message templates and determining what emoji to use
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_build_url: $BITRISE_BUILD_URL
+    opts:
+      title: "Build URL"
+      summary: The build URL, used for message templates
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_git_commit: $BITRISE_GIT_COMMIT
+    opts:
+      title: "Git Commit"
+      summary: The git commit, used for message templates
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_git_message: $BITRISE_GIT_MESSAGE
+    opts:
+      title: "Git Message"
+      summary: The git message, used for message templates
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_pull_request: $PR
+    opts:
+      title: "Pull Request"
+      summary: The pull request status, used for message templates and determining what messages to send
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_pull_request_id: $BITRISE_PULL_REQUEST
+    opts:
+      title: "Pull Request ID"
+      summary: The pull request ID, used for message templates
+      is_expand: true
+      is_required: true
+      is_sensitive: false
+  - zulip_step_pull_request_repository: $BITRISEIO_PULL_REQUEST_REPOSITORY_URL
+    opts:
+      title: "Pull Request Repository"
+      summary: The URL of the repository that triggered the PR build, used for message templates
+      is_expand: true
+      is_required: true
+      is_sensitive: false
   - zulip_step_domain:
     opts:
       title: "Zulip Domain"
@@ -201,7 +256,7 @@ inputs:
       is_expand: true
       is_required: true
       is_sensitive: false
-  - zulip_step_recipients_pr:
+  - zulip_step_recipients_pull_request:
     opts:
       title: "Zulip Recipients (Pull Request)"
       summary: List of recipients to send pull request build notifications to
@@ -235,7 +290,7 @@ inputs:
       is_expand: true
       is_required: false
       is_sensitive: true
-  - zulip_step_template_pr:
+  - zulip_step_template_pull_request:
     opts:
       title: "Message Template (Pull Request)"
       summary: The template for the message if this is a pull request build
@@ -269,7 +324,7 @@ inputs:
       is_expand: false
       is_required: false
       is_sensitive: false
-  - zulip_step_topic_pr:
+  - zulip_step_topic_pull_request:
     opts:
       title: "Zulip Topic (Pull Request)"
       summary: The topic for your pull request build notifications. This field is optional.
@@ -311,59 +366,3 @@ inputs:
   #    is_expand: true
   #    is_required: false
   #    is_sensitive: false
-  - zulip_step_build_number: $BITRISE_BUILD_NUMBER
-    opts:
-      title: "Build Number"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
-  - zulip_step_build_status: $BITRISE_BUILD_STATUS
-    opts:
-      title: "Build Status"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
-  - zulip_step_build_url: $BITRISE_BUILD_URL
-    opts:
-      title: "Build URL"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
-  - zulip_step_git_commit: $BITRISE_GIT_COMMIT
-    opts:
-      title: "Git Commit"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
-  - zulip_step_git_message: $BITRISE_GIT_MESSAGE
-    opts:
-      title: "Git Message"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
-  - zulip_step_pr: $PR
-    opts:
-      title: "Pull Request"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
-  - zulip_step_pull_request: $BITRISE_PULL_REQUEST
-    opts:
-      title: "Pull Request ID"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
-  - zulip_step_pull_request_repository: $BITRISEIO_PULL_REQUEST_REPOSITORY_URL
-    opts:
-      title: "Pull Request Repository"
-      is_dont_change_value: true
-      is_expand: true
-      is_required: true
-      is_sensitive: false
