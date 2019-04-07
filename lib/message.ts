@@ -61,7 +61,7 @@ export class Message {
 
     // Create the auth string
     const auth: string = Buffer
-      .from(`${config.zulip.bot.emailAddress}:${config.zulip.bot.apiKey}`)
+      .from(`${config.zulip.bot.email}:${config.zulip.bot.key}`)
       .toString('base64');
 
     // Setup the request options
